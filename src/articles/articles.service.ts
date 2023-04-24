@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
@@ -15,27 +15,41 @@ export class ArticlesService {
     return this.prisma.article.findMany({ where: { published: false } });
   }
 
-  findAll() {
-    return this.prisma.article.findMany({ where: { published: true } });
+  findAll(draft: string) {
+    const isDraft = draft === 'false' ? false : true;
+
+    return this.prisma.article.findMany({ where: { published: isDraft } });
   }
 
-  findOne(id: number) {
-    return this.prisma.article.findUnique({
+  async findOne(id: number) {
+    const article = await this.prisma.article.findUnique({
       where: { id },
       include: {
         author: true,
       },
     });
+
+    if (!article) {
+      throw new NotFoundException(
+        `Article not found with the specify id: ${id}`,
+      );
+    }
+
+    return article;
   }
 
-  update(id: number, updateArticleDto: UpdateArticleDto) {
+  async update(id: number, updateArticleDto: UpdateArticleDto) {
+    await this.findOne(id);
+
     return this.prisma.article.update({
       where: { id },
       data: updateArticleDto,
     });
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    await this.findOne(id);
+
     return this.prisma.article.delete({ where: { id } });
   }
 }

@@ -18,7 +18,7 @@ async function main() {
     },
     create: {
       email: 'sabin@adams.com',
-      name: 'Sabin Adams',
+      nom: 'Sabin Adams',
       password: passwordSabin,
     },
   });
@@ -30,7 +30,7 @@ async function main() {
     },
     create: {
       email: 'alex@ruheni.com',
-      name: 'Alex Ruheni',
+      nom: 'Alex Ruheni',
       password: passwordAlex,
     },
   });

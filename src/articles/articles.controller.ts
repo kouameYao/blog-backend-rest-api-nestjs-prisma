@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -29,8 +30,8 @@ export class ArticlesController {
 
   @Get()
   @ApiOkResponse({ type: ArticleEntity, isArray: true })
-  async findAll() {
-    const articles = await this.articlesService.findAll();
+  async findAll(@Query('draft') draft: string = 'false') {
+    const articles = await this.articlesService.findAll(draft);
     return articles.map((article) => new ArticleEntity(article));
   }
 
