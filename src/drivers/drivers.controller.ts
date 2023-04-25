@@ -32,22 +32,31 @@ export class DriversController {
   @Get()
   @ApiBearerAuth()
   @ApiOkResponse({ type: DriverEntity, isArray: true })
-  findAll() {
-    return this.driversService.findAll();
+  async findAll() {
+    const drivers = await this.driversService.findAll();
+    return drivers.map((driver) => new DriverEntity(driver));
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.driversService.findOne(+id);
+  @ApiOkResponse({ type: DriverEntity })
+  async findOne(@Param('id') id: string) {
+    return new DriverEntity(await this.driversService.findOne(+id));
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDriverDto: UpdateDriverDto) {
-    return this.driversService.update(+id, updateDriverDto);
+  @ApiCreatedResponse({ type: DriverEntity })
+  async update(
+    @Param('id') id: string,
+    @Body() updateDriverDto: UpdateDriverDto,
+  ) {
+    return new DriverEntity(
+      await this.driversService.update(+id, updateDriverDto),
+    );
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.driversService.remove(+id);
+  @ApiOkResponse({ type: DriverEntity })
+  async remove(@Param('id') id: string) {
+    return new DriverEntity(await this.driversService.remove(+id));
   }
 }

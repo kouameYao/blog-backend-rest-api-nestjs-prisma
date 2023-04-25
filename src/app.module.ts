@@ -1,12 +1,15 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { ArticlesModule } from './articles/articles.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
 import { DriversModule } from './drivers/drivers.module';
+import { TrucksModule } from './trucks/trucks.module';
+import { LoggerMiddleware } from './utils/middleware/logger.middleware';
 
 @Module({
   imports: [
@@ -20,8 +23,13 @@ import { DriversModule } from './drivers/drivers.module';
     UsersModule,
     ArticlesModule,
     DriversModule,
+    TrucksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

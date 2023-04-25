@@ -338,15 +338,15 @@ CREATE TABLE [dbo].[StockPrevu_pivot] (
 CREATE TABLE [dbo].[Truck] (
     [id] INT NOT NULL IDENTITY(1,1),
     [marque] NVARCHAR(1000),
-    [model] NVARCHAR(1000),
-    [chassi] NVARCHAR(1000) NOT NULL,
-    [kilometrage] NVARCHAR(1000),
-    [poids] INT NOT NULL,
-    [commentaire] NVARCHAR(1000) NOT NULL,
+    [chassi] NVARCHAR(1000),
+    [poids] INT,
+    [type] NVARCHAR(1000) NOT NULL,
+    [matricule] NVARCHAR(1000) NOT NULL,
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [Truck_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [updatedAt] DATETIME2 NOT NULL,
     CONSTRAINT [Truck_pkey] PRIMARY KEY CLUSTERED ([id]),
-    CONSTRAINT [Truck_chassi_key] UNIQUE NONCLUSTERED ([chassi])
+    CONSTRAINT [Truck_chassi_key] UNIQUE NONCLUSTERED ([chassi]),
+    CONSTRAINT [Truck_matricule_key] UNIQUE NONCLUSTERED ([matricule])
 );
 
 -- CreateTable
