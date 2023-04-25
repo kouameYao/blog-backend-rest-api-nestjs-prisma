@@ -1,10 +1,12 @@
 import { Config } from './config.interface';
+import * as dotenv from 'dotenv';
 
 export const appConfig: Config = {
   swagger: {
     enabled: true,
-    title: 'CDCI-SAM',
-    description: 'SAM',
+    title: 'Cout de transport',
+    description:
+      'Avoir la valeur des coûts de transport par site et par camion',
     version: '1.0',
     path: 'api/docs',
   },

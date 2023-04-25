@@ -334,6 +334,33 @@ CREATE TABLE [dbo].[StockPrevu_pivot] (
     CONSTRAINT [PK_StockPrevu_pivot] PRIMARY KEY CLUSTERED ([Annee],[Cod_Ray],[Cod_Con])
 );
 
+-- CreateTable
+CREATE TABLE [dbo].[Truck] (
+    [id] INT NOT NULL IDENTITY(1,1),
+    [marque] NVARCHAR(1000),
+    [model] NVARCHAR(1000),
+    [chassi] NVARCHAR(1000) NOT NULL,
+    [kilometrage] NVARCHAR(1000),
+    [poids] INT NOT NULL,
+    [commentaire] NVARCHAR(1000) NOT NULL,
+    [createdAt] DATETIME2 NOT NULL CONSTRAINT [Truck_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
+    [updatedAt] DATETIME2 NOT NULL,
+    CONSTRAINT [Truck_pkey] PRIMARY KEY CLUSTERED ([id]),
+    CONSTRAINT [Truck_chassi_key] UNIQUE NONCLUSTERED ([chassi])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[Driver] (
+    [id] INT NOT NULL IDENTITY(1,1),
+    [nom] NVARCHAR(1000),
+    [prenoms] NVARCHAR(1000),
+    [cni] NVARCHAR(1000) NOT NULL,
+    [createdAt] DATETIME2 NOT NULL CONSTRAINT [Driver_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
+    [updatedAt] DATETIME2 NOT NULL,
+    CONSTRAINT [Driver_pkey] PRIMARY KEY CLUSTERED ([id]),
+    CONSTRAINT [Driver_cni_key] UNIQUE NONCLUSTERED ([cni])
+);
+
 -- AddForeignKey
 ALTER TABLE [dbo].[Article] ADD CONSTRAINT [Article_authorId_fkey] FOREIGN KEY ([authorId]) REFERENCES [dbo].[User]([id]) ON DELETE SET NULL ON UPDATE CASCADE;
 

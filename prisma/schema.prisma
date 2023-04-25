@@ -18,7 +18,6 @@ model Article {
   published   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-<<<<<<< HEAD
   author      User?    @relation(fields: [authorId], references: [id])
   authorId    Int?
 }
@@ -385,6 +384,25 @@ model StockPrevu_pivot {
   Rayon    Rayon    @relation(fields: [Cod_Ray], references: [Cod_Ray], onUpdate: NoAction, map: "FK_StockPrevu_pivot_Rayon")
 
   @@id([Annee, Cod_Ray, Cod_Con], map: "PK_StockPrevu_pivot")
-=======
->>>>>>> 228b7c5 (feat: config finish)
+}
+
+model Truck {
+  id          Int      @id @default(autoincrement())
+  marque      String?
+  model       String?
+  chassi      String   @unique
+  kilometrage String?
+  poids       Int
+  commentaire String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Driver {
+  id        Int      @id @default(autoincrement())
+  nom       String?
+  prenoms   String?
+  cni       String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
