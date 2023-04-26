@@ -1,15 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma, Site } from '@prisma/client';
+
 import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
 import { PRISMA_ERROR } from 'src/utils/constants';
 
 @Injectable()
 export class SitesService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createSiteDto: CreateSiteDto) {
+  async create(createSiteDto: CreateSiteDto): Promise<Site> {
     try {
       return await this.prisma.site.create({
         data: createSiteDto,
@@ -26,23 +27,21 @@ export class SitesService {
     }
   }
 
-  findAll() {
+  findAll(): Promise<Site[]> {
     return this.prisma.site.findMany();
   }
 
-  async findOne(id: number) {
-    const driver = await this.prisma.site.findUnique({ where: { id } });
+  async findOne(id: number): Promise<Site> {
+    const site = await this.prisma.site.findUnique({ where: { id } });
 
-    if (!driver) {
-      throw new NotFoundException(
-        `Driver not found with the specify id: ${id}`,
-      );
+    if (!site) {
+      throw new NotFoundException(`Le site ${id} n'existe pas dans la base`);
     }
 
-    return driver;
+    return site;
   }
 
-  async update(id: number, updateSiteDto: UpdateSiteDto) {
+  async update(id: number, updateSiteDto: UpdateSiteDto): Promise<Site> {
     await this.findOne(id);
 
     return this.prisma.site.update({
@@ -51,7 +50,7 @@ export class SitesService {
     });
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Site> {
     await this.findOne(id);
 
     return this.prisma.site.delete({ where: { id } });

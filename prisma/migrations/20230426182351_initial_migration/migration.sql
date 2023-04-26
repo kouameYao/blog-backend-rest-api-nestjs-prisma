@@ -59,7 +59,10 @@ CREATE TABLE [dbo].[Commande] (
     [noCmd] NVARCHAR(1000) NOT NULL,
     [siteId] INT NOT NULL,
     [camionId] INT,
-    CONSTRAINT [Commande_pkey] PRIMARY KEY CLUSTERED ([id])
+    [createdAt] DATETIME2 NOT NULL CONSTRAINT [Commande_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
+    [updatedAt] DATETIME2 NOT NULL,
+    CONSTRAINT [Commande_pkey] PRIMARY KEY CLUSTERED ([id]),
+    CONSTRAINT [Commande_noCmd_key] UNIQUE NONCLUSTERED ([noCmd])
 );
 
 -- CreateTable
@@ -67,15 +70,21 @@ CREATE TABLE [dbo].[Site] (
     [id] INT NOT NULL IDENTITY(1,1),
     [code] INT NOT NULL,
     [libelle] NVARCHAR(1000) NOT NULL,
-    CONSTRAINT [Site_pkey] PRIMARY KEY CLUSTERED ([id])
+    [createdAt] DATETIME2 NOT NULL CONSTRAINT [Site_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
+    [updatedAt] DATETIME2 NOT NULL,
+    CONSTRAINT [Site_pkey] PRIMARY KEY CLUSTERED ([id]),
+    CONSTRAINT [Site_code_key] UNIQUE NONCLUSTERED ([code])
 );
 
 -- CreateTable
 CREATE TABLE [dbo].[Reception] (
     [id] INT NOT NULL IDENTITY(1,1),
     [code] NVARCHAR(1000) NOT NULL,
-    [commandeId] INT,
-    CONSTRAINT [Reception_pkey] PRIMARY KEY CLUSTERED ([id])
+    [commandeId] INT NOT NULL,
+    [createdAt] DATETIME2 NOT NULL CONSTRAINT [Reception_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
+    [updatedAt] DATETIME2 NOT NULL,
+    CONSTRAINT [Reception_pkey] PRIMARY KEY CLUSTERED ([id]),
+    CONSTRAINT [Reception_code_key] UNIQUE NONCLUSTERED ([code])
 );
 
 -- AddForeignKey
@@ -88,7 +97,7 @@ ALTER TABLE [dbo].[Commande] ADD CONSTRAINT [Commande_siteId_fkey] FOREIGN KEY (
 ALTER TABLE [dbo].[Commande] ADD CONSTRAINT [Commande_camionId_fkey] FOREIGN KEY ([camionId]) REFERENCES [dbo].[Truck]([id]) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE [dbo].[Reception] ADD CONSTRAINT [Reception_commandeId_fkey] FOREIGN KEY ([commandeId]) REFERENCES [dbo].[Commande]([id]) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE [dbo].[Reception] ADD CONSTRAINT [Reception_commandeId_fkey] FOREIGN KEY ([commandeId]) REFERENCES [dbo].[Commande]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 COMMIT TRAN;
 

@@ -1,4 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Article } from '@prisma/client';
+
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
@@ -7,21 +9,21 @@ import { UpdateArticleDto } from './dto/update-article.dto';
 export class ArticlesService {
   constructor(private prisma: PrismaService) {}
 
-  create(createArticleDto: CreateArticleDto) {
+  create(createArticleDto: CreateArticleDto): Promise<Article> {
     return this.prisma.article.create({ data: createArticleDto });
   }
 
-  findDrafts() {
+  findDrafts(): Promise<Article[]> {
     return this.prisma.article.findMany({ where: { published: false } });
   }
 
-  findAll(draft: string) {
+  findAll(draft: string): Promise<Article[]> {
     const isDraft = draft === 'false' ? false : true;
 
     return this.prisma.article.findMany({ where: { published: isDraft } });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Article> {
     const article = await this.prisma.article.findUnique({
       where: { id },
       include: {
@@ -38,7 +40,10 @@ export class ArticlesService {
     return article;
   }
 
-  async update(id: number, updateArticleDto: UpdateArticleDto) {
+  async update(
+    id: number,
+    updateArticleDto: UpdateArticleDto,
+  ): Promise<Article> {
     await this.findOne(id);
 
     return this.prisma.article.update({
@@ -47,7 +52,7 @@ export class ArticlesService {
     });
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Article> {
     await this.findOne(id);
 
     return this.prisma.article.delete({ where: { id } });

@@ -1,3 +1,4 @@
 export const PRISMA_ERROR = {
   P2002: 'P2002',
+  FOREIGN_KEY_CONSTRAINT: 'P2003',
 };

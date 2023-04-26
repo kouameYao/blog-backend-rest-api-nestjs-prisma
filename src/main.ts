@@ -1,13 +1,14 @@
 import { NestFactory, Reflector } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import {
   ClassSerializerInterceptor,
   ValidationPipe,
   Logger,
 } from '@nestjs/common';
-import { appConfig } from './config';
 import * as dotenv from 'dotenv';
+
+import { AppModule } from './app.module';
+import { appConfig } from './config';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');

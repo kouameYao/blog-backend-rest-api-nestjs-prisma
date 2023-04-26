@@ -1,9 +1,10 @@
-// src/users/users.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { User } from '@prisma/client';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import * as bcrypt from 'bcrypt';
 
 export const roundsOfHashing = 10;
 
@@ -11,7 +12,7 @@ export const roundsOfHashing = 10;
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const hashedPassword = await bcrypt.hash(
       createUserDto.password,
       roundsOfHashing,
@@ -24,11 +25,11 @@ export class UsersService {
     });
   }
 
-  findAll() {
+  findAll(): Promise<User[]> {
     return this.prisma.user.findMany();
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<User> {
     const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user) {
@@ -38,7 +39,7 @@ export class UsersService {
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     await this.findOne(id);
 
     if (updateUserDto.password) {
@@ -54,7 +55,7 @@ export class UsersService {
     });
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<User> {
     await this.findOne(id);
 
     return this.prisma.user.delete({ where: { id } });

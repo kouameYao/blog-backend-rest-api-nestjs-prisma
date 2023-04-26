@@ -11,6 +11,12 @@ export class SiteEntity implements Site {
   @ApiProperty()
   libelle: string;
 
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
+
   constructor(data: Partial<SiteEntity>) {
     Object.assign(this, data);
   }

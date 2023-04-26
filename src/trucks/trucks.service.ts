@@ -2,14 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTruckDto } from './dto/create-truck.dto';
 import { UpdateTruckDto } from './dto/update-truck.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, Truck } from '@prisma/client';
 import { PRISMA_ERROR } from 'src/utils/constants';
 
 @Injectable()
 export class TrucksService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createTruckDto: CreateTruckDto) {
+  async create(createTruckDto: CreateTruckDto): Promise<Truck> {
     try {
       return await this.prisma.truck.create({
         data: createTruckDto,
@@ -26,11 +26,11 @@ export class TrucksService {
     }
   }
 
-  findAll() {
+  findAll(): Promise<Truck[]> {
     return this.prisma.truck.findMany();
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Truck> {
     const truck = await this.prisma.truck.findUnique({ where: { id } });
 
     if (!truck) {
@@ -40,7 +40,7 @@ export class TrucksService {
     return truck;
   }
 
-  async update(id: number, updateTruckDto: UpdateTruckDto) {
+  async update(id: number, updateTruckDto: UpdateTruckDto): Promise<Truck> {
     await this.findOne(id);
 
     return this.prisma.truck.update({
@@ -49,7 +49,7 @@ export class TrucksService {
     });
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Truck> {
     await this.findOne(id);
 
     return this.prisma.truck.delete({ where: { id } });

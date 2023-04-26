@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Commande } from '@prisma/client';
+
 import { SiteEntity } from 'src/sites/entities/site.entity';
 
 export class CommandeEntity implements Commande {
@@ -26,6 +27,12 @@ export class CommandeEntity implements Commande {
 
   @ApiProperty({ required: false, type: CommandeEntity })
   receptions?: CommandeEntity;
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
 
   constructor({ camion, site, ...data }: Partial<CommandeEntity>) {
     Object.assign(this, data);

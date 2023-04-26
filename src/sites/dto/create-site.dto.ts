@@ -8,7 +8,6 @@ export class CreateSiteDto {
   libelle: string;
 
   @IsNumber()
-  @MinLength(3)
   @ApiProperty()
   code: number;
 }

@@ -1,4 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Commande, Prisma } from '@prisma/client';
+
 import { CreateCommandeDto } from './dto/create-commande.dto';
 import { UpdateCommandeDto } from './dto/update-commande.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -7,15 +9,25 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class CommandesService {
   constructor(private prisma: PrismaService) {}
 
-  create(createCommandeDto: CreateCommandeDto) {
-    return this.prisma.commande.create({ data: createCommandeDto });
+  async create(createCommandeDto: CreateCommandeDto): Promise<Commande> {
+    const site = await this.prisma.site.findUnique({
+      where: { id: createCommandeDto.siteId },
+    });
+
+    if (!site) {
+      throw new NotFoundException(
+        `Le site ${createCommandeDto.siteId} n'existe pas dans la base`,
+      );
+    }
+
+    return await this.prisma.commande.create({ data: createCommandeDto });
   }
 
-  findAll() {
-    return this.prisma.article.findMany();
+  findAll(): Promise<Commande[]> {
+    return this.prisma.commande.findMany();
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Commande> {
     const commande = await this.prisma.commande.findUnique({
       where: { id },
     });
@@ -29,7 +41,10 @@ export class CommandesService {
     return commande;
   }
 
-  async update(id: number, updateCommandeDto: UpdateCommandeDto) {
+  async update(
+    id: number,
+    updateCommandeDto: UpdateCommandeDto,
+  ): Promise<Commande> {
     await this.findOne(id);
 
     return this.prisma.commande.update({
@@ -38,7 +53,7 @@ export class CommandesService {
     });
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Commande> {
     await this.findOne(id);
 
     return this.prisma.commande.delete({ where: { id } });

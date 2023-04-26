@@ -1,8 +1,6 @@
-// src/articles/entities/article.entity.ts
-
 import { Article } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from 'src/users/entities/user.entity';
+
 import { CommandeEntity } from 'src/commandes/entities/commande.entity';
 
 export class ArticleEntity implements Article {
