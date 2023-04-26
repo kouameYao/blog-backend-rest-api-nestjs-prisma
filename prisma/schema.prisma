@@ -8,37 +8,35 @@ datasource db {
 }
 
 model Article {
-  id          Int      @id @default(autoincrement())
-  title       String   @unique
-  description String?
-  body        String
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  author      User?    @relation(fields: [authorId], references: [id])
-  authorId    Int?
+  id          Int       @id @default(autoincrement())
+  poids       Int?
+  designation String    @unique
+  published   Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  commande    Commande? @relation(fields: [commandeId], references: [id])
+  commandeId  Int?
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   nom       String?
   prenoms   String?
-  email     String    @unique
+  email     String   @unique
   password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  articles  Article[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Truck {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   marque    String?
-  chassi    String?  @unique
   poids     Int?
   type      String // Must be an enum where all type on truck are listed
-  matricule String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  matricule String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  commandes Commande[]
 }
 
 model Driver {
@@ -48,4 +46,29 @@ model Driver {
   cni       String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Commande {
+  id         Int         @id @default(autoincrement())
+  noCmd      String
+  site       Site        @relation(fields: [siteId], references: [id])
+  siteId     Int
+  articles   Article[]
+  receptions Reception[]
+  camion     Truck?      @relation(fields: [camionId], references: [id])
+  camionId   Int?
+}
+
+model Site {
+  id        Int        @id @default(autoincrement())
+  code      Int
+  libelle   String
+  commandes Commande[]
+}
+
+model Reception {
+  id         Int       @id @default(autoincrement())
+  code       String
+  Commande   Commande? @relation(fields: [commandeId], references: [id])
+  commandeId Int?
 }

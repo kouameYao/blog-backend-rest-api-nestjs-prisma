@@ -25,7 +25,7 @@ export class ArticlesService {
     const article = await this.prisma.article.findUnique({
       where: { id },
       include: {
-        author: true,
+        commande: true,
       },
     });
 

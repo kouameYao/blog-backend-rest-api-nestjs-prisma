@@ -3,19 +3,17 @@
 import { Article } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { CommandeEntity } from 'src/commandes/entities/commande.entity';
 
 export class ArticleEntity implements Article {
   @ApiProperty()
   id: number;
 
   @ApiProperty()
-  title: string;
-
-  @ApiProperty({ required: false, nullable: true })
-  description: string | null;
+  poids: number;
 
   @ApiProperty()
-  body: string;
+  designation: string;
 
   @ApiProperty()
   published: boolean;
@@ -27,16 +25,16 @@ export class ArticleEntity implements Article {
   updatedAt: Date;
 
   @ApiProperty({ required: false, nullable: true })
-  authorId: number | null;
+  commandeId: number | null;
 
-  @ApiProperty({ required: false, type: UserEntity })
-  author?: UserEntity;
+  @ApiProperty({ required: false, type: CommandeEntity })
+  commande?: CommandeEntity;
 
-  constructor({ author, ...data }: Partial<ArticleEntity>) {
+  constructor({ commande, ...data }: Partial<ArticleEntity>) {
     Object.assign(this, data);
 
-    if (author) {
-      this.author = new UserEntity(author);
+    if (commande) {
+      this.commande = new CommandeEntity(commande);
     }
   }
 }

@@ -10,6 +10,9 @@ import { AuthModule } from './auth/auth.module';
 import { DriversModule } from './drivers/drivers.module';
 import { TrucksModule } from './trucks/trucks.module';
 import { LoggerMiddleware } from './utils/middleware/logger.middleware';
+import { CommandesModule } from './commandes/commandes.module';
+import { SitesModule } from './sites/sites.module';
+import { ReceptionsModule } from './receptions/receptions.module';
 
 @Module({
   imports: [
@@ -24,6 +27,9 @@ import { LoggerMiddleware } from './utils/middleware/logger.middleware';
     ArticlesModule,
     DriversModule,
     TrucksModule,
+    CommandesModule,
+    SitesModule,
+    ReceptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
